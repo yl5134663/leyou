@@ -5,9 +5,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.item.mapper.BrandMapper;
 import com.pojo.Brand;
+import com.pojo.Category;
 import com.pojo.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
@@ -42,5 +44,43 @@ public class BrandService {
         List<Brand> brandsList = brandMapper.selectByExample(example);
         PageInfo<Brand> brandPageInfo = new PageInfo<>(brandsList);
         return new PageResult<>(brandPageInfo.getTotal(), brandPageInfo.getList());
+    }
+
+    /**
+     * 新增商品
+     * @param brand
+     * @param cids
+     */
+    @Transactional
+    public void addBrand(Brand brand, List<Integer> cids) {
+        brandMapper.insertSelective(brand);
+        cids.forEach(cid->{
+            brandMapper.insertCategoryAndBrand(cid,brand.getId());
+        });
+    }
+
+    /**
+     * 修改品牌
+     */
+    public void updateBrand(Brand brand) {
+        brandMapper.updateByPrimaryKey(brand);
+    }
+
+    /**
+     * 删除品牌
+     * @param bid
+     */
+    public void deleteByPid(Long bid) {
+        brandMapper.deleteByPrimaryKey(bid);
+    }
+
+    /**
+     * 根据分类id查询品牌
+     * @param cid
+     * @return
+     */
+    public List<Brand> queryCategoryByCid(Long cid) {
+       List<Brand>brands= brandMapper.queryCategoryByCid(cid);
+       return brands;
     }
 }
