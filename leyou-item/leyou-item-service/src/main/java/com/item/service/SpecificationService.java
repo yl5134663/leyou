@@ -65,4 +65,38 @@ public class SpecificationService {
     public void insertGroup(SpecGroup specGroup) {
     specGroupMapper.insert(specGroup);
     }
+
+    /**
+     * 查询规格参数
+     * @param gid
+     * @param cid
+     * @param generic
+     * @param searching
+     * @return
+     */
+    public List<SpecParam> queryParams(Long gid, Long cid, Boolean generic, Boolean searching) {
+        SpecParam specParam=new SpecParam();
+        specParam.setGroupId(gid);
+        specParam.setCid(cid);
+        specParam.setSearching(searching);
+        specParam.setGeneric(generic);
+        //如果param中有属性为null，则不会把属性作为查询条件，因此该方法具备通用性，即可根据gid查询，也可根据cid查询。
+        List<SpecParam> specParams = specParamMapper.select(specParam);
+        return specParams;
+    }
+
+    /**
+     * 商品详情页需要的数据
+     * @param cid
+     * @return
+     */
+    public List<SpecGroup> querySpecsByCid(Long cid) {
+        // 查询规格组
+        List<SpecGroup> groups = this.queryGroupByCid(cid);
+        groups.forEach(g -> {
+            // 查询组内参数
+            g.setParams(this.queryParams(g.getId(), null, null, null));
+        });
+        return groups;
+    }
 }

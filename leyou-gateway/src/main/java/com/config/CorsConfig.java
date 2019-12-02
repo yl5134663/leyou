@@ -14,6 +14,8 @@ public class CorsConfig {
     CorsConfiguration corsConfiguration=new CorsConfiguration();
     //1) 允许的域,不要写*，否则cookie就无法使用了
     corsConfiguration.addAllowedOrigin("http://manager.leyou.com");
+    corsConfiguration.addAllowedOrigin("http://www.leyou.com");
+    corsConfiguration.addAllowedOrigin("http://api.leyou.com");
     //是否发送cookie信息
     corsConfiguration.setAllowCredentials(true);
     corsConfiguration.addAllowedMethod("*");

@@ -3,12 +3,38 @@ server:
 spring:
   application:
     name: leyou-gateway
+  datasource:
+        url: jdbc:mysql://127.0.0.1:3306/leyou
+        username: root
+        password: suibian123
+        driver-class-name: com.mysql.jdbc.Driver
 eureka:
   client:
     registry-fetch-interval-seconds: 5
     service-url:
       defaultZone: http://127.0.0.1:10086/eureka
+    eureka-server-read-timeout-seconds: 60000
+    eureka-server-connect-timeout-seconds: 60000
 zuul:
   prefix: /api
   routes:
    item-service: /item/**
+   search-service: /search/**
+   user-service: /user/**
+   auth-service: /auth/**
+   cart-service: /cart/**
+   order-service: /order/**
+  add-host-header: true #添加cookie,携带请求本身的头信息
+  sensitive-headers:  #配置禁止使用的头信息,设置为空,否则cookie无效
+leyou:
+  jwt:
+    pubKeyPath:  C:\\tmp\\rsa\\rsa.pub # 公钥地址
+    cookieName: LY_TOKEN # cookie的名称
+  filter:
+      allowPaths:
+        - /api/auth
+        - /api/search
+        - /api/user/register
+        - /api/user/check
+        - /api/user/code
+        - /api/item

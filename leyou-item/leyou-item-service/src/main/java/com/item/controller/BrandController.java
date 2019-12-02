@@ -41,6 +41,15 @@ public class BrandController {
         return ResponseEntity.ok(brandPageResult);
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<Brand> queryBrandById(@PathVariable("id") Long id) {
+        Brand brand = brandService.queryBrandById(id);
+        if (brand == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(brand);
+    }
+
     /**
      * 新增品牌
      *
@@ -71,15 +80,16 @@ public class BrandController {
         brandService.deleteByPid(bid);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
     /**
      * 根据分类id查询品牌列表
      */
     @GetMapping("cid/{cid}")
-    public ResponseEntity<List<Brand>> queryCategoryByCid(@PathVariable("cid")Long cid){
-       List<Brand>brands=brandService.queryCategoryByCid(cid);
-       if(CollectionUtils.isEmpty(brands)){
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-       }
-       return ResponseEntity.ok(brands);
+    public ResponseEntity<List<Brand>> queryCategoryByCid(@PathVariable("cid") Long cid) {
+        List<Brand> brands = brandService.queryCategoryByCid(cid);
+        if (CollectionUtils.isEmpty(brands)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(brands);
     }
 }

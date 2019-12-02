@@ -1,8 +1,9 @@
 package com.pojo;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PageResult<T> {
+public class PageResult<T> implements Serializable {
     private Long total;//分页总条数
     private Integer totalPage;//总页数
     private List<T> items;//当前页数据
@@ -44,5 +45,7 @@ public class PageResult<T> {
         this.items = items;
     }
 
-
+    public PageResult() {
+        super();
+    }
 }

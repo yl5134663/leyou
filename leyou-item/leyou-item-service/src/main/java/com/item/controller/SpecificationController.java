@@ -34,6 +34,19 @@ public class SpecificationController {
     }
 
     /**
+     * 商品详情,查询规格参数组
+     * @param cid
+     * @return
+     */
+    @GetMapping("{cid}")
+    public ResponseEntity<List<SpecGroup>> querySpecsByCid(@PathVariable("cid") Long cid){
+        List<SpecGroup> list = this.specificationService.querySpecsByCid(cid);
+        if(list == null || list.size() == 0){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(list);
+    }
+    /**
      * 修改规格参数分组
      *
      * @param specGroup
@@ -72,13 +85,36 @@ public class SpecificationController {
      * @param gid
      * @return
      */
-    @GetMapping("params")
+   /* @GetMapping("params")
     public ResponseEntity<List<SpecParam>> queryParamsByGid(@RequestParam("gid") Long gid) {
         List<SpecParam> specParams = specificationService.queryParamsByGid(gid);
         if (CollectionUtils.isEmpty(specParams)) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(specParams);
+    }*/
+
+    /**
+     * 查询规格参数
+     *
+     * @param gid
+     * @param cid
+     * @param generic
+     * @param searching
+     * @return
+     */
+    @GetMapping("params")
+    public ResponseEntity<List<SpecParam>> querySpecParams(
+            @RequestParam(value = "gid", required = false) Long gid,
+            @RequestParam(value = "cid", required = false) Long cid,
+            @RequestParam(value = "generic", required = false) Boolean generic,
+            @RequestParam(value = "searching", required = false) Boolean searching) {
+        List<SpecParam> params = this.specificationService.queryParams(gid, cid, generic, searching);
+        if (CollectionUtils.isEmpty(params)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(params);
+
     }
 
 }

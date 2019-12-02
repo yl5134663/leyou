@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -46,5 +43,33 @@ public class CategoryController {
             return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(categories);
+    }
+
+    /**
+     * 通过id列表查询分类名称
+     * @param ids
+     * @return
+     */
+    @GetMapping("names")
+    public ResponseEntity<List<String>> queryNamesByIds(@RequestParam("ids")List<Long> ids){
+
+        List<String> names = this.categoryService.selectNameByIds(ids);
+        if (CollectionUtils.isEmpty(names)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(names);
+    }
+    /**
+     * 根据3级分类id，查询1~3级的分类
+     * @param id
+     * @return
+     */
+    @GetMapping("all/level")
+    public ResponseEntity<List<Category>> queryAllByCid3(@RequestParam("id") Long id){
+        List<Category> list = this.categoryService.queryAllByCid3(id);
+        if (list == null || list.size() < 1) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(list);
     }
 }
